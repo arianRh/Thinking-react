@@ -1,17 +1,39 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { useState } from "react";
+import { createRoot } from "react-dom/client";
+import { SearchBar } from "./SearchBar";
+import { ProductTable } from "./ProductTable";
+import { PRODUCTS } from "./data";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+const rootElement = document.getElementById("root");
+const root = createRoot(rootElement);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+function FilterableProductTable({ products }) {
+	const [inputText, setInputText] = useState("");
+	const [stockCheck, setStockCheck] = useState(false);
+
+	const handleChange = (i) => {
+		setInputText(i.target.value);
+	};
+
+	const handleClick = () => {
+		setStockCheck(!stockCheck);
+	};
+
+	return (
+		<>
+			<SearchBar
+				value={inputText}
+				inputChange={handleChange}
+				checkValue={stockCheck}
+				stockChange={handleClick}
+			/>
+			<ProductTable
+				products={products}
+				inputText={inputText}
+				stockCheck={stockCheck}
+			/>
+		</>
+	);
+}
+
+root.render(<FilterableProductTable products={PRODUCTS} />);
